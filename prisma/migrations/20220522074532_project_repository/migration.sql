@@ -1,0 +1,16 @@
+-- CreateTable
+CREATE TABLE "Project" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "name" TEXT NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "Repository" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "language" TEXT NOT NULL,
+    "path" TEXT NOT NULL,
+    "projectId" INTEGER NOT NULL,
+    CONSTRAINT "Repository_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
