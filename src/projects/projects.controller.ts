@@ -32,21 +32,21 @@ export class ProjectsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Project> {
-    return this.projectsService.findOne(+id);
+  findOne(@Param('id') id: number): Promise<Project> {
+    return this.projectsService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
+  update(@Param('id') id: number, @Body() updateProjectDto: UpdateProjectDto) {
     if (!updateProjectDto.name) {
       throw new BadRequestException('no name field');
     }
 
-    return this.projectsService.update(+id, updateProjectDto);
+    return this.projectsService.update(id, updateProjectDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<Project> {
-    return this.projectsService.remove(+id);
+  remove(@Param('id') id: number): Promise<Project> {
+    return this.projectsService.remove(id);
   }
 }

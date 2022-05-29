@@ -1,6 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
 
-export class CreateProjectDto {
+export class FindAllRepositoriesQuery {
   @IsNotEmpty()
-  name: string;
+  projectId: number;
 }
