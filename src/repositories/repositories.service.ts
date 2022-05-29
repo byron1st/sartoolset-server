@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { FindAllRepositoriesQuery } from 'src/repositories/dto/findall-repositories.query';
 import { CreateRepositoryDto } from './dto/create-repository.dto';
 import { UpdateRepositoryDto } from './dto/update-repository.dto';
 
@@ -20,7 +19,7 @@ export class RepositoriesService {
     });
   }
 
-  findAll({ projectId }: FindAllRepositoriesQuery) {
+  findAll(projectId: number) {
     return this.prisma.repository.findMany({
       where: { projectId },
     });

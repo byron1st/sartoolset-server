@@ -7,11 +7,11 @@ import {
   Param,
   Delete,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { RepositoriesService } from './repositories.service';
 import { CreateRepositoryDto } from './dto/create-repository.dto';
 import { UpdateRepositoryDto } from './dto/update-repository.dto';
-import { FindAllRepositoriesQuery } from 'src/repositories/dto/findall-repositories.query';
 
 @Controller('repositories')
 export class RepositoriesController {
@@ -23,8 +23,9 @@ export class RepositoriesController {
   }
 
   @Get()
-  findAll(@Query() findAllRepositoriesQuery: FindAllRepositoriesQuery) {
-    return this.repositoriesService.findAll(findAllRepositoriesQuery);
+  findAll(@Query('projectId', ParseIntPipe) projectId: number) {
+    console.log(typeof projectId);
+    return this.repositoriesService.findAll(projectId);
   }
 
   @Get(':id')
