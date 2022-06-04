@@ -24,7 +24,6 @@ export class RepositoriesController {
 
   @Get()
   findAll(@Query('projectId', ParseIntPipe) projectId: number) {
-    console.log(typeof projectId);
     return this.repositoriesService.findAll(projectId);
   }
 

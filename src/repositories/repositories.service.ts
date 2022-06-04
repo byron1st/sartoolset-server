@@ -19,10 +19,18 @@ export class RepositoriesService {
     });
   }
 
-  findAll(projectId: number) {
-    return this.prisma.repository.findMany({
+  async findAll(projectId: number) {
+    const repositories = await this.prisma.repository.findMany({
       where: { projectId },
+      include: {
+        relations: true,
+      },
     });
+
+    return repositories.map((repository) => ({
+      ...repository,
+      relations: repository.relations ? repository.relations.length : 0,
+    }));
   }
 
   findOne(id: number) {

@@ -23,6 +23,20 @@ model Repository {
   language  String
   path      String
 
-  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project   Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId Int
+  relations Relation[]
+}
+
+model Relation {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  // Source, Target: “/“ separated path
+  source   String // System
+  target   String // 3rd Part & Stanadard
+  location String // System code location
+
+  repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  repositoryId Int
 }
