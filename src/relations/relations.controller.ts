@@ -30,8 +30,11 @@ export class RelationsController {
   }
 
   @Get()
-  findAll(@Query('repositoryId', ParseIntPipe) repositoryId: number) {
-    return this.relationsService.findAll(repositoryId);
+  findAll(
+    @Query('projectId', ParseIntPipe) projectId: number,
+    @Query('sort') sort: string,
+  ) {
+    return this.relationsService.findAll(projectId, sort);
   }
 
   @Get(':id')

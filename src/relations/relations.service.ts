@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Relation, Repository } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import { CreateRelationDto } from './dto/create-relation.dto';
 
@@ -12,7 +13,9 @@ export class RelationsService {
         this.prisma.relation.create({
           data: {
             source: relation.sourceModule,
-            target: `${relation.targetModule}.${relation.targetFunc}`,
+            target: `${relation.targetModule}${
+              relation.targetFunc ? `.${relation.targetFunc}` : ''
+            }`,
             location: relation.sourceLocation,
             repository: {
               connect: { id: repositoryId },
@@ -23,8 +26,38 @@ export class RelationsService {
     );
   }
 
-  findAll(repositoryId: number) {
-    return this.prisma.relation.findMany({ where: { repositoryId } });
+  async findAll(projectId: number, sort: string) {
+    const repositories = await this.prisma.repository.findMany({
+      where: { projectId },
+      include: { relations: true },
+    });
+
+    return repositories
+      .reduce(
+        (relations: (Relation & { repository: Repository })[], repository) => {
+          relations.push(
+            ...repository.relations.map((relation) => ({
+              ...relation,
+              repository: { ...repository, relations: undefined },
+            })),
+          );
+
+          return relations;
+        },
+        [],
+      )
+      .sort((a, b) => {
+        switch (sort) {
+          case 'source':
+            return sortBySource(a, b);
+          case 'target':
+            return sortByTarget(a, b);
+          case 'language':
+            return sortByLanguage(a, b);
+          default:
+            return 0;
+        }
+      });
   }
 
   findOne(id: number) {
@@ -34,4 +67,34 @@ export class RelationsService {
   removeAll(repositoryId: number) {
     return this.prisma.relation.deleteMany({ where: { repositoryId } });
   }
+}
+
+function sortBySource(a: Relation, b: Relation): number {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  if (a.source > b.source) {
+    return 1;
+  }
+  return -1;
+}
+
+function sortByTarget(a: Relation, b: Relation): number {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  if (a.target > b.target) {
+    return 1;
+  }
+  return -1;
+}
+
+function sortByLanguage(
+  a: Relation & { repository: Repository },
+  b: Relation & { repository: Repository },
+): number {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  if (a.repository.language > b.repository.language) {
+    return 1;
+  }
+  return -1;
 }
