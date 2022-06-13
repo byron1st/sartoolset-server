@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateMappingruleDto {
   @IsNumber()
@@ -7,9 +7,10 @@ export class CreateMappingruleDto {
   @IsNotEmpty()
   connectorType: string;
 
-  @IsNotEmpty()
-  procedureCondition: string;
+  @IsInt()
+  procedureConditionID: number;
 
+  @IsNotEmpty()
   memoryConditions: string[];
 
   @IsString({ each: true })

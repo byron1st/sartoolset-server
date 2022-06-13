@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { MappingrulesService } from './mappingrules.service';
 import { CreateMappingruleDto } from './dto/create-mappingrule.dto';
@@ -21,8 +23,8 @@ export class MappingrulesController {
   }
 
   @Get()
-  findAll() {
-    return this.mappingrulesService.findAll();
+  findAll(@Query('projectId', ParseIntPipe) projectId: number) {
+    return this.mappingrulesService.findAll(projectId);
   }
 
   @Get(':id')

@@ -53,6 +53,7 @@ model TargetModule {
   repository          Repository           @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
   repositoryId        Int
   dependencyRelations DependencyRelation[]
+  MappingRule         MappingRule[]
 }
 
 model DependencyRelation {
@@ -100,7 +101,8 @@ model MappingRule {
 
   connectorType                                ConnectorType                                  @relation(fields: [connectorTypeId], references: [id], onDelete: Cascade)
   connectorTypeId                              Int
-  procedureCondition                           String
+  procedureCondition                           TargetModule                                   @relation(fields: [procedureConditionId], references: [id])
+  procedureConditionId                         Int
   memoryConditions                             MemoryCondition[]
   sourceComponentIdentifierTypesOnMappingRules SourceComponentIdentifierTypesOnMappingRules[]
   targetComponentIdentifierTypesOnMappingRules TargetComponentIdentifierTypesOnMappingRules[]

@@ -10,7 +10,7 @@ export class MappingrulesService {
   create({
     projectId,
     connectorType,
-    procedureCondition,
+    procedureConditionID,
     memoryConditions,
     sourceIdentifierTypes,
     targetIdentifierTypes,
@@ -28,7 +28,9 @@ export class MappingrulesService {
             },
           },
         },
-        procedureCondition,
+        procedureCondition: {
+          connect: { id: procedureConditionID },
+        },
         memoryConditions: {
           create: memoryConditions.map((condition) => ({ condition })),
         },
@@ -66,8 +68,25 @@ export class MappingrulesService {
     });
   }
 
-  findAll() {
-    return `This action returns all mappingrules`;
+  findAll(projectId: number) {
+    return this.prisma.mappingRule.findMany({
+      where: { connectorType: { projectId } },
+      orderBy: [
+        { connectorType: { name: 'asc' } },
+        { procedureCondition: { module: 'asc' } },
+      ],
+      include: {
+        connectorType: true,
+        procedureCondition: { include: { repository: true } },
+        memoryConditions: true,
+        sourceComponentIdentifierTypesOnMappingRules: {
+          include: { componentIdentifierType: true },
+        },
+        targetComponentIdentifierTypesOnMappingRules: {
+          include: { componentIdentifierType: true },
+        },
+      },
+    });
   }
 
   findOne(id: number) {
