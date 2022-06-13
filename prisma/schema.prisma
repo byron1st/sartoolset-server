@@ -11,32 +11,125 @@ datasource db {
 }
 
 model Project {
-  id           Int          @id @default(autoincrement())
-  createdAt    DateTime     @default(now())
-  name         String
-  repositories Repository[]
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  name      String
+
+  repositories            Repository[]
+  connectorTypes          ConnectorType[]
+  ComponentIdentifierType ComponentIdentifierType[]
 }
 
 model Repository {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  language  String
-  path      String
 
-  project   Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  projectId Int
-  relations Relation[]
+  language String
+  path     String
+
+  project       Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId     Int
+  sourceModules SourceModule[]
+  targetModules TargetModule[]
 }
 
-model Relation {
+model SourceModule {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
 
-  // Source, Target: “/“ separated path
-  source   String // System
-  target   String // 3rd Part & Stanadard
-  location String // System code location
+  module String @unique
 
-  repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
-  repositoryId Int
+  repository          Repository           @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  repositoryId        Int
+  dependencyRelations DependencyRelation[]
+}
+
+model TargetModule {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  module String @unique
+
+  repository          Repository           @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  repositoryId        Int
+  dependencyRelations DependencyRelation[]
+}
+
+model DependencyRelation {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  location String
+
+  source   SourceModule @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  sourceId Int
+  target   TargetModule @relation(fields: [targetId], references: [id], onDelete: Cascade)
+  targetId Int
+}
+
+model ConnectorType {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  name String
+
+  project      Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId    Int
+  mappingRules MappingRule[]
+
+  @@unique([name, projectId])
+}
+
+model ComponentIdentifierType {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  name                                         String
+  description                                  String?
+  sourceComponentIdentifierTypesOnMappingRules SourceComponentIdentifierTypesOnMappingRules[]
+  targetComponentIdentifierTypesOnMappingRules TargetComponentIdentifierTypesOnMappingRules[]
+  project                                      Project                                        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId                                    Int
+
+  @@unique([name, projectId])
+}
+
+model MappingRule {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  connectorType                                ConnectorType                                  @relation(fields: [connectorTypeId], references: [id], onDelete: Cascade)
+  connectorTypeId                              Int
+  procedureCondition                           String
+  memoryConditions                             MemoryCondition[]
+  sourceComponentIdentifierTypesOnMappingRules SourceComponentIdentifierTypesOnMappingRules[]
+  targetComponentIdentifierTypesOnMappingRules TargetComponentIdentifierTypesOnMappingRules[]
+}
+
+model MemoryCondition {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  condition String
+
+  mappingRule   MappingRule @relation(fields: [mappingRuleId], references: [id], onDelete: Cascade)
+  mappingRuleId Int
+}
+
+model SourceComponentIdentifierTypesOnMappingRules {
+  mappingRule               MappingRule             @relation(fields: [mappingRuleId], references: [id])
+  mappingRuleId             Int
+  componentIdentifierType   ComponentIdentifierType @relation(fields: [componentIdentifierTypeId], references: [id])
+  componentIdentifierTypeId Int
+
+  @@id([mappingRuleId, componentIdentifierTypeId])
+}
+
+model TargetComponentIdentifierTypesOnMappingRules {
+  mappingRule               MappingRule             @relation(fields: [mappingRuleId], references: [id])
+  mappingRuleId             Int
+  componentIdentifierType   ComponentIdentifierType @relation(fields: [componentIdentifierTypeId], references: [id])
+  componentIdentifierTypeId Int
+
+  @@id([mappingRuleId, componentIdentifierTypeId])
 }

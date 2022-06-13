@@ -8,10 +8,13 @@ import {
   BadRequestException,
   Query,
   ParseIntPipe,
+  ParseEnumPipe,
 } from '@nestjs/common';
 import { RelationsService } from './relations.service';
 import { CreateRelationDto } from './dto/create-relation.dto';
 import { DeleteRelationsDto } from './dto/delete-relations.dto';
+import { Sort } from 'src/relations/enum/sort.enum';
+import { Direction } from 'src/relations/enum/direction.enum';
 
 @Controller('relations')
 export class RelationsController {
@@ -32,9 +35,12 @@ export class RelationsController {
   @Get()
   findAll(
     @Query('projectId', ParseIntPipe) projectId: number,
-    @Query('sort') sort: string,
+    @Query('sort', new ParseEnumPipe(Sort)) sort: Sort,
+    @Query('direction', new ParseEnumPipe(Direction)) dir: Direction,
+    @Query('skip', ParseIntPipe) skip: number,
+    @Query('take', ParseIntPipe) take: number,
   ) {
-    return this.relationsService.findAll(projectId, sort);
+    return this.relationsService.findAll(projectId, sort, dir, skip, take);
   }
 
   @Get(':id')

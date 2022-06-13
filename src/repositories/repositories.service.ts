@@ -23,13 +23,21 @@ export class RepositoriesService {
     const repositories = await this.prisma.repository.findMany({
       where: { projectId },
       include: {
-        relations: true,
+        sourceModules: { include: { dependencyRelations: true } },
+        targetModules: true,
       },
     });
 
     return repositories.map((repository) => ({
       ...repository,
-      relations: repository.relations ? repository.relations.length : 0,
+      relations: repository.sourceModules
+        ? repository.sourceModules.reduce((relationsCount, source) => {
+            relationsCount += source.dependencyRelations.length;
+            return relationsCount;
+          }, 0)
+        : 0,
+      sources: repository.sourceModules.length,
+      targets: repository.targetModules.length,
     }));
   }
 
