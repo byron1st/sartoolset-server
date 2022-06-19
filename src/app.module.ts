@@ -5,6 +5,7 @@ import { RelationsModule } from './relations/relations.module';
 import { MappingrulesModule } from './mappingrules/mappingrules.module';
 import { ConnectortypesModule } from './connectortypes/connectortypes.module';
 import { TargetmodulesModule } from './targetmodules/targetmodules.module';
+import { ComponentidentifiersModule } from './componentidentifiers/componentidentifiers.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { TargetmodulesModule } from './targetmodules/targetmodules.module';
     MappingrulesModule,
     ConnectortypesModule,
     TargetmodulesModule,
+    ComponentidentifiersModule,
   ],
   controllers: [],
   providers: [],
