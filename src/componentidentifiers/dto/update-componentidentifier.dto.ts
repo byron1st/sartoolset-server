@@ -1,6 +1,9 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateComponentidentifierDto } from './create-componentidentifier.dto';
+import { IsString } from 'class-validator';
 
-export class UpdateComponentidentifierDto extends PartialType(
-  CreateComponentidentifierDto,
-) {}
+export class UpdateComponentidentifierDto {
+  @IsString()
+  name: string;
+
+  @IsString()
+  description?: string;
+}

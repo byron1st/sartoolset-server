@@ -17,10 +17,10 @@ export class ComponentidentifiersService {
     return `This action returns a #${id} componentidentifier`;
   }
 
-  update(
-    id: number,
-    updateComponentidentifierDto: UpdateComponentidentifierDto,
-  ) {
-    return `This action updates a #${id} componentidentifier`;
+  update(id: number, { name, description }: UpdateComponentidentifierDto) {
+    return this.prisma.componentIdentifierType.update({
+      where: { id },
+      data: { name, description },
+    });
   }
 }
