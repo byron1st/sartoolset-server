@@ -98,6 +98,6 @@ export class MappingrulesService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} mappingrule`;
+    return this.prisma.mappingRule.delete({ where: { id } });
   }
 }
