@@ -89,6 +89,32 @@ export class MappingrulesService {
     });
   }
 
+  findPOLocations(projectId: number) {
+    return this.prisma.mappingRule.findMany({
+      where: { connectorType: { projectId } },
+      include: {
+        connectorType: true,
+        procedureCondition: {
+          include: {
+            repository: true,
+            dependencyRelations: {
+              include: {
+                source: true,
+              },
+            },
+          },
+        },
+        memoryConditions: true,
+        sourceComponentIdentifierTypesOnMappingRules: {
+          include: { componentIdentifierType: true },
+        },
+        targetComponentIdentifierTypesOnMappingRules: {
+          include: { componentIdentifierType: true },
+        },
+      },
+    });
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} mappingrule`;
   }

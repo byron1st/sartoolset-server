@@ -27,6 +27,11 @@ export class MappingrulesController {
     return this.mappingrulesService.findAll(projectId);
   }
 
+  @Get('polocations')
+  findPOLocations(@Query('projectId', ParseIntPipe) projectId: number) {
+    return this.mappingrulesService.findPOLocations(projectId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.mappingrulesService.findOne(+id);
