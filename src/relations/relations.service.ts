@@ -48,11 +48,23 @@ export class RelationsService {
     dir: Direction,
     skip: number,
     take: number,
+    searchTerm: string,
+    searchTarget: string,
   ) {
     const orderByDirection = dir === Direction.DESC ? 'desc' : 'asc'; // Default orderBy direction is asc
 
     const relations = await this.prisma.dependencyRelation.findMany({
-      where: { source: { repository: { projectId } } },
+      where: {
+        source: {
+          repository: { projectId },
+          module:
+            searchTarget === 'source' ? { contains: searchTerm } : undefined,
+        },
+        target:
+          searchTarget === 'target'
+            ? { module: { contains: searchTerm } }
+            : undefined,
+      },
       orderBy:
         sort === Sort.LANGUAGE
           ? { location: orderByDirection }

@@ -39,8 +39,18 @@ export class RelationsController {
     @Query('direction', new ParseEnumPipe(Direction)) dir: Direction,
     @Query('skip', ParseIntPipe) skip: number,
     @Query('take', ParseIntPipe) take: number,
+    @Query('searchTerm') searchTerm: string,
+    @Query('searchTarget') searchTarget: string,
   ) {
-    return this.relationsService.findAll(projectId, sort, dir, skip, take);
+    return this.relationsService.findAll(
+      projectId,
+      sort,
+      dir,
+      skip,
+      take,
+      searchTerm,
+      searchTarget,
+    );
   }
 
   @Get(':id')
