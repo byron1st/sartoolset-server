@@ -119,7 +119,7 @@ model MemoryCondition {
 }
 
 model SourceComponentIdentifierTypesOnMappingRules {
-  mappingRule               MappingRule             @relation(fields: [mappingRuleId], references: [id])
+  mappingRule               MappingRule             @relation(fields: [mappingRuleId], references: [id], onDelete: Cascade)
   mappingRuleId             Int
   componentIdentifierType   ComponentIdentifierType @relation(fields: [componentIdentifierTypeId], references: [id])
   componentIdentifierTypeId Int
@@ -128,7 +128,7 @@ model SourceComponentIdentifierTypesOnMappingRules {
 }
 
 model TargetComponentIdentifierTypesOnMappingRules {
-  mappingRule               MappingRule             @relation(fields: [mappingRuleId], references: [id])
+  mappingRule               MappingRule             @relation(fields: [mappingRuleId], references: [id], onDelete: Cascade)
   mappingRuleId             Int
   componentIdentifierType   ComponentIdentifierType @relation(fields: [componentIdentifierTypeId], references: [id])
   componentIdentifierTypeId Int
