@@ -18,6 +18,7 @@ model Project {
   repositories            Repository[]
   connectorTypes          ConnectorType[]
   ComponentIdentifierType ComponentIdentifierType[]
+  ExecutionScenario       ExecutionScenario[]
 }
 
 model Repository {
@@ -106,6 +107,7 @@ model MappingRule {
   memoryConditions                             MemoryCondition[]
   sourceComponentIdentifierTypesOnMappingRules SourceComponentIdentifierTypesOnMappingRules[]
   targetComponentIdentifierTypesOnMappingRules TargetComponentIdentifierTypesOnMappingRules[]
+  ExecutionTrace                               ExecutionTrace[]
 }
 
 model MemoryCondition {
@@ -134,4 +136,29 @@ model TargetComponentIdentifierTypesOnMappingRules {
   componentIdentifierTypeId Int
 
   @@id([mappingRuleId, componentIdentifierTypeId])
+}
+
+model ExecutionScenario {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  name           String
+  description    String?
+  ExecutionTrace ExecutionTrace[]
+  project        Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId      Int
+}
+
+model ExecutionTrace {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  recordedAt             DateTime
+  sourceIdentifierValues String // comma separated
+  targetIdentifierValues String // comma separated
+
+  mappingRule         MappingRule       @relation(fields: [mappingRuleId], references: [id], onDelete: Cascade)
+  mappingRuleId       Int
+  executionScenario   ExecutionScenario @relation(fields: [executionScenarioId], references: [id], onDelete: Cascade)
+  executionScenarioId Int
 }

@@ -6,6 +6,7 @@ import { MappingrulesModule } from './mappingrules/mappingrules.module';
 import { ConnectortypesModule } from './connectortypes/connectortypes.module';
 import { TargetmodulesModule } from './targetmodules/targetmodules.module';
 import { ComponentidentifiersModule } from './componentidentifiers/componentidentifiers.module';
+import { ScenariosModule } from './scenarios/scenarios.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ComponentidentifiersModule } from './componentidentifiers/componentiden
     ConnectortypesModule,
     TargetmodulesModule,
     ComponentidentifiersModule,
+    ScenariosModule,
   ],
   controllers: [],
   providers: [],
