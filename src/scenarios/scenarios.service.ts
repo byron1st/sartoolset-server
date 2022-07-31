@@ -19,9 +19,18 @@ export class ScenariosService {
     });
   }
 
-  findAll(projectId: number) {
-    return this.prisma.executionScenario.findMany({
+  async findAll(projectId: number) {
+    const scenarios = await this.prisma.executionScenario.findMany({
       where: { projectId },
+      include: { ExecutionTrace: true },
+    });
+
+    return scenarios.map((scenario) => {
+      const logFiles = new Set(
+        scenario.ExecutionTrace.map((trace) => trace.logOrigin),
+      );
+
+      return { ...scenario, logFiles: Array.from(logFiles) };
     });
   }
 
