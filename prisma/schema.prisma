@@ -156,6 +156,7 @@ model ExecutionTrace {
   recordedAt             DateTime
   sourceIdentifierValues String // comma separated
   targetIdentifierValues String // comma separated
+  logOrigin              String
 
   mappingRule         MappingRule       @relation(fields: [mappingRuleId], references: [id], onDelete: Cascade)
   mappingRuleId       Int

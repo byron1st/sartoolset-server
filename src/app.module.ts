@@ -7,6 +7,7 @@ import { ConnectortypesModule } from './connectortypes/connectortypes.module';
 import { TargetmodulesModule } from './targetmodules/targetmodules.module';
 import { ComponentidentifiersModule } from './componentidentifiers/componentidentifiers.module';
 import { ScenariosModule } from './scenarios/scenarios.module';
+import { ExecutiontracesModule } from './executiontraces/executiontraces.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ScenariosModule } from './scenarios/scenarios.module';
     TargetmodulesModule,
     ComponentidentifiersModule,
     ScenariosModule,
+    ExecutiontracesModule,
   ],
   controllers: [],
   providers: [],
